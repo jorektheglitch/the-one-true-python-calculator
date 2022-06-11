@@ -94,6 +94,7 @@ def build_stack(tokens: Iterable[Token]) -> Generator[StackItem, Any, None]:
             else:
                 raise RuntimeError("Unclosed parenthesis")
         last_token = token
+    yield from reversed(op_stack)
 
 
 def parse(string: str) -> List[StackItem]:
