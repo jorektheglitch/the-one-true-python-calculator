@@ -20,7 +20,9 @@ PRIORITIES = {
     OPERATOR.SUB: 1,
     OPERATOR.MUL: 2,
     OPERATOR.DIV: 2,
-    OPERATOR.POW: 3
+    OPERATOR.UADD: 3,
+    OPERATOR.USUB: 3,
+    OPERATOR.POW: 4
 }
 OPERATOR_TOKENS: Dict[TOKEN, OPERATOR] = {
     TOKEN.PLUS: OPERATOR.ADD,
@@ -75,10 +77,7 @@ def build_stack(tokens: Iterable[Token]) -> Generator[StackItem, Any, None]:
                 operator = OPERATOR_TOKENS[token]
             curr_priority = PRIORITIES[operator]
             top_op = op_stack.top
-            while top_op and (
-                top_op in UNARY_OPS or
-                curr_priority <= PRIORITIES.get(top_op, 0)
-            ):
+            while top_op and (curr_priority <= PRIORITIES.get(top_op, 0)):
                 yield op_stack.pop()
                 top_op = op_stack.top
             op_stack.append(operator)
