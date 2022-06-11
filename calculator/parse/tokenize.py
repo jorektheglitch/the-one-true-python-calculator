@@ -57,3 +57,6 @@ def tokenize(string: str) -> Generator[Token, Any, None]:
         else:
             msg = f"Unrecognizable {repr(char)} symbol at position {i}."
             raise TokenizationError(msg, position=i)
+    buffer = buffer.strip()
+    if buffer:
+        yield buffer
