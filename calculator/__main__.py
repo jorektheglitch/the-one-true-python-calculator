@@ -15,5 +15,6 @@ if expression is None:  # expression does not specified
 elif not expression:  # expression is empty string
     print("Please specify expression string.")
 else:
+    expression = expression.strip("\"\'")
     result = evaluate(expression)
     print(result)
