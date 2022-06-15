@@ -93,7 +93,7 @@ def build_stack(tokens: Iterable[Token]) -> Generator[StackItem, Any, None]:
                     break
                 yield op_stack.pop()
             else:
-                raise RuntimeError("Unclosed parenthesis")
+                raise ParsingError("Unclosed parenthesis.")
         last_token = token
     yield from reversed(op_stack)
 
