@@ -77,9 +77,11 @@ def build_stack(tokens: Iterable[Token]) -> Generator[StackItem, Any, None]:
                 operator = OPERATOR_TOKENS[token]
             curr_priority = PRIORITIES[operator]
             top_op = op_stack.top
-            while top_op and (curr_priority <= PRIORITIES.get(top_op, 0)):
-                yield op_stack.pop()
-                top_op = op_stack.top
+            ops = top_op, operator
+            if not all(op is OPERATOR.POW for op in ops):
+                while top_op and (curr_priority <= PRIORITIES.get(top_op, 0)):
+                    yield op_stack.pop()
+                    top_op = op_stack.top
             op_stack.append(operator)
         elif token is TOKEN.OPEN_PAREN:
             op_stack.append(token)  # type: ignore
