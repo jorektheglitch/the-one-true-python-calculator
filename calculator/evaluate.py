@@ -20,6 +20,10 @@ UNARY_OPERATIONS: Dict[OPERATOR, UnaryOp] = {
 }
 
 
+class EvaluationError(Exception):
+    pass
+
+
 def evaluate_stack(stack) -> Number:
     values_stack: List[Number] = []
     for item in stack:
@@ -27,15 +31,25 @@ def evaluate_stack(stack) -> Number:
             result = item
         elif item in BINARY_OPERATIONS:
             binop = BINARY_OPERATIONS[item]
-            right = values_stack.pop()
-            left = values_stack.pop()
+            try:
+                right = values_stack.pop()
+                left = values_stack.pop()
+            except IndexError:
+                raise EvaluationError
             result = binop(left, right)
         elif item in UNARY_OPERATIONS:
             unop = UNARY_OPERATIONS[item]
-            arg = values_stack.pop()
+            try:
+                arg = values_stack.pop()
+            except IndexError:
+                raise EvaluationError
             result = unop(arg)
         values_stack.append(result)
-    return values_stack[0]
+    result, *remaining = values_stack
+    if remaining:
+        msg = "Multiple values on stack at the end of evaluation."
+        raise EvaluationError(msg)
+    return result
 
 
 def evaluate(expression: str) -> Union[int, float]:
