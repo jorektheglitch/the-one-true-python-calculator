@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from typing import Optional
 
-from .evaluate import evaluate
+from .evaluate import evaluate, EvaluationError
 
 
 parser = ArgumentParser(description='Calculator')
@@ -16,5 +16,12 @@ elif not expression:  # expression is empty string
     print("Please specify expression string.")
 else:
     expression = expression.strip("\"\'")
-    result = evaluate(expression)
-    print(result)
+    try:
+        result = evaluate(expression)
+    except EvaluationError as e:
+        print(f"{type(e).__name__}: {e}")
+        exit_code = 1
+    else:
+        print(result)
+        exit_code = 0
+    exit(exit_code)
