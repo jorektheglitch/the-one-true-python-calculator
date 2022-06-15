@@ -4,7 +4,10 @@ from typing import Optional
 from .evaluate import evaluate, EvaluationError
 
 
-parser = ArgumentParser(description='Calculator')
+parser = ArgumentParser(
+    prog="calc",
+    description='Calculator demo written on Python.'
+)
 parser.add_argument('expression', nargs='?')
 
 args = parser.parse_args()
