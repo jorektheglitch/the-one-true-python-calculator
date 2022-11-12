@@ -67,9 +67,14 @@ def tokenize(string: str) -> Generator[Token, Any, None]:
         if token is not None:
             current_pair = (last_token, token)
             if all(isinstance(t, TOKEN) for t in current_pair):
-                if token not in (TOKEN.HYPHEN, TOKEN.PLUS):
+                if last_token not in (TOKEN.HYPHEN, TOKEN.PLUS, TOKEN.OPEN_PAREN, TOKEN.CLOSE_PAREN):
+                    if token not in (TOKEN.HYPHEN, TOKEN.PLUS, TOKEN.OPEN_PAREN, TOKEN.CLOSE_PAREN):
+                        # handling for two operators ("- *") situation
+                        msg = f"Unexpected {repr(char)} operator at position {i} in exression '{string}'."
+                        raise TokenizationError(msg)
+                if current_pair in ((TOKEN.CLOSE_PAREN,TOKEN.OPEN_PAREN), (TOKEN.OPEN_PAREN,TOKEN.CLOSE_PAREN)):
                     # handling for two operators ("- *") situation
-                    msg = f"Unexpected {repr(char)} operator."
+                    msg = f"Unexpected {repr(char)} operator at position {i} in exression '{string}'."
                     raise TokenizationError(msg)
             last_token = token
             yield token
