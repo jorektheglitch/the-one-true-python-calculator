@@ -79,7 +79,7 @@ def build_stack(tokens: Iterable[Token]) -> Generator[StackItem, Any, None]:
             top_op = op_stack.top
             ops = top_op, operator
             if not all(op is OPERATOR.POW for op in ops):
-                while top_op and (curr_priority <= PRIORITIES.get(top_op, 0)):
+                while top_op and (curr_priority <= PRIORITIES.get(top_op, 0)) and operator not in UNARY_OPS:
                     yield op_stack.pop()
                     top_op = op_stack.top
             op_stack.append(operator)
