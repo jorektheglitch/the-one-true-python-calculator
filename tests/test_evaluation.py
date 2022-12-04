@@ -39,6 +39,7 @@ class TestBasicOperations(TestCase):
     def test_unary_subtraction_multiple(self):
         self.assertEqual(evaluate("--1"), 1)
         self.assertEqual(evaluate("---1"), -1)
+        self.assertEqual(evaluate("1---1"), 0)
 
 
 class TestOperatorsPriority(TestCase):
@@ -77,10 +78,10 @@ class TestOperatorsPriority(TestCase):
         self.assertEqual(evaluate("2^3^2"), 512)
 
     def test_exponentiation_unary_subtraction(self):
-        self.assertEqual(evaluate("2^-3"), 0.125)
+        self.assertEqual(evaluate("2^---3"), 0.125)
 
     def test_unary_subtraction_exponentiation(self):
-        self.assertEqual(evaluate("-2^2"), -4)
+        self.assertEqual(evaluate("---2^2"), -4)
 
 
 class TestEvaluation(TestCase):
