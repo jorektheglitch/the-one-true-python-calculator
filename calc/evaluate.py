@@ -34,10 +34,12 @@ def evaluate_stack(stack) -> Number:
             try:
                 right = values_stack.pop()
                 left = values_stack.pop()
+                result = binop(left, right)
             except IndexError as e:
                 msg = f"Evaluation failed at {index} operation"
                 raise EvaluationError from e
-            result = binop(left, right)
+            except ZeroDivisionError:
+                return float("NaN")
         elif item in UNARY_OPERATIONS:
             unop = UNARY_OPERATIONS[item]
             try:
