@@ -58,10 +58,10 @@ class Stack(List[T], Generic[T]):
 
 def build_stack(tokens: Iterable[Token]) -> Generator[StackItem, Any, None]:
     op_stack: Stack[OPERATOR] = Stack()
-    last_token = None
+    last_token: Token | None = None
     for token in tokens:
         if isinstance(token, str):
-            value: Union[int, float]
+            value: int | float
             if "." in token:
                 value = float(token)
             else:
@@ -69,17 +69,17 @@ def build_stack(tokens: Iterable[Token]) -> Generator[StackItem, Any, None]:
             yield value
         elif token in OPERATOR_TOKENS:
             if token in (TOKEN.PLUS, TOKEN.HYPHEN):  # special case for + and -
-                if isinstance(last_token, TOKEN) or last_token is None:
-                    operator = UNARY_OPERATOR_TOKENS[token]
-                else:
+                if isinstance(last_token, str) or last_token is TOKEN.CLOSE_PAREN:
                     operator = OPERATOR_TOKENS[token]
+                else:
+                    operator = UNARY_OPERATOR_TOKENS[token]
             else:
                 operator = OPERATOR_TOKENS[token]
             curr_priority = PRIORITIES[operator]
             top_op = op_stack.top
             ops = top_op, operator
             if not all(op is OPERATOR.POW for op in ops):
-                while top_op and (curr_priority <= PRIORITIES.get(top_op, 0)):
+                while top_op and (curr_priority <= PRIORITIES.get(top_op, 0)) and operator not in UNARY_OPS:
                     yield op_stack.pop()
                     top_op = op_stack.top
             op_stack.append(operator)
