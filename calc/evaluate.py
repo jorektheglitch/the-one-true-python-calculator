@@ -26,7 +26,7 @@ class EvaluationError(Exception):
 
 def evaluate_stack(stack) -> Number:
     values_stack: List[Number] = []
-    for item in stack:
+    for index, item in enumerate(stack):
         if isinstance(item, (int, float)):
             result = item
         elif item in BINARY_OPERATIONS:
@@ -34,15 +34,17 @@ def evaluate_stack(stack) -> Number:
             try:
                 right = values_stack.pop()
                 left = values_stack.pop()
-            except IndexError:
-                raise EvaluationError
+            except IndexError as e:
+                msg = f"Evaluation failed at {index} operation"
+                raise EvaluationError from e
             result = binop(left, right)
         elif item in UNARY_OPERATIONS:
             unop = UNARY_OPERATIONS[item]
             try:
                 arg = values_stack.pop()
-            except IndexError:
-                raise EvaluationError
+            except IndexError as e:
+                msg = f"Evaluation failed at {index} operation"
+                raise EvaluationError from e
             result = unop(arg)
         values_stack.append(result)
     result, *remaining = values_stack
